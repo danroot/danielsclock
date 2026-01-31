@@ -114,24 +114,8 @@
             
             if (forceDarkMode) {
                 document.body.className = 'dark-mode';
-            } else {
-                // Get current hour in Central Time
-                const now = new Date();
-                const formatter = new Intl.DateTimeFormat('en-US', {
-                    timeZone: 'America/Chicago',
-                    hour: 'numeric',
-                    hour12: false
-                });
-                const parts = formatter.formatToParts(now);
-                const hour = parseInt(parts.find(p => p.type === 'hour').value);
-                
-                // 7pm (19:00) to 6am (6:00): light mode (black on white)
-                // 6am (6:00) to 7pm (19:00): dark mode (white on black)
-                if (hour >= 19 || hour < 6) {
-                    document.body.className = 'dark-mode';
-                } else {
-                    document.body.className = 'light-mode';
-                }
+            } else{
+                document.body.className = 'light-mode';
             }
         }
         
