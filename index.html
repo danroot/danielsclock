@@ -53,8 +53,10 @@
         .container {
             position: absolute;
             left: 30px;
-            top: 50%;
-            transform: translateY(-50%);
+            top: 65px;
+            bottom: 0;
+            display: flex;
+            align-items: center;
         }
         .date {
             position: absolute;
@@ -67,7 +69,7 @@
 <body>
     <div class="date" id="date"></div>
     <div class="container">
-        <svg width="360" height="360" viewBox="0 0 300 300">
+        <svg width="400" height="400" viewBox="0 0 300 300">
             <!-- Clock face -->
             <circle cx="150" cy="150" r="140" class="clock-face" stroke-width="4"/>
             
