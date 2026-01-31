@@ -117,16 +117,20 @@
             } else {
                 // Get current hour in Central Time
                 const now = new Date();
-                const centralTimeString = now.toLocaleString('en-US', { timeZone: 'America/Chicago' });
-                const centralTime = new Date(centralTimeString);
-                const hour = centralTime.getHours();
+                const formatter = new Intl.DateTimeFormat('en-US', {
+                    timeZone: 'America/Chicago',
+                    hour: 'numeric',
+                    hour12: false
+                });
+                const parts = formatter.formatToParts(now);
+                const hour = parseInt(parts.find(p => p.type === 'hour').value);
                 
                 // 7pm (19:00) to 6am (6:00): light mode (black on white)
                 // 6am (6:00) to 7pm (19:00): dark mode (white on black)
                 if (hour >= 19 || hour < 6) {
-                    document.body.className = 'light-mode';
-                } else {
                     document.body.className = 'dark-mode';
+                } else {
+                    document.body.className = 'light-mode';
                 }
             }
         }
@@ -134,16 +138,24 @@
         function updateClock() {
             const now = new Date();
             
-            // Get time in Central Time
-            const centralTimeString = now.toLocaleString('en-US', { timeZone: 'America/Chicago' });
-            const centralTime = new Date(centralTimeString);
+            // Get time in Central Time using proper formatter
+            const formatter = new Intl.DateTimeFormat('en-US', {
+                timeZone: 'America/Chicago',
+                hour: 'numeric',
+                minute: 'numeric',
+                hour12: false
+            });
             
-            const hours = centralTime.getHours() % 12;
-            const minutes = centralTime.getMinutes();
+            const parts = formatter.formatToParts(now);
+            const hourValue = parts.find(p => p.type === 'hour').value;
+            const minuteValue = parts.find(p => p.type === 'minute').value;
             
-            // Calculate angles
-            const minuteAngle = (minutes * 6) - 90; // 6 degrees per minute
-            const hourAngle = (hours * 30 + minutes * 0.5) - 90; // 30 degrees per hour
+            const hours = parseInt(hourValue) % 12;
+            const minutes = parseInt(minuteValue);
+            
+            // Calculate angles (no offset needed - hands start at 12 o'clock)
+            const minuteAngle = minutes * 6; // 6 degrees per minute
+            const hourAngle = hours * 30 + minutes * 0.5; // 30 degrees per hour
             
             // Update hands
             document.getElementById('minute-hand').setAttribute('transform', `rotate(${minuteAngle} 150 150)`);
