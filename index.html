@@ -93,10 +93,10 @@
 </head>
 <body>
     <div class="date" id="date"></div>
-    <div class="weather" id="weather">
-        <div class="weather-temp" id="weather-temp"></div>
-        <div class="weather-high-low" id="weather-high-low"></div>
-    </div>
+    <section class="weather" id="weather" aria-label="Current weather in Madison, Mississippi">
+        <div class="weather-temp" id="weather-temp" aria-live="polite"></div>
+        <div class="weather-high-low" id="weather-high-low" aria-live="polite"></div>
+    </section>
     <div class="container">
         <svg width="440" height="440">
             <!-- Clock face -->
@@ -146,30 +146,30 @@
         
         // Weather icons mapping (using Unicode weather symbols)
         const weatherIcons = {
-            0: '☀️',  // Clear sky
-            1: '🌤️',  // Mainly clear
-            2: '⛅',  // Partly cloudy
-            3: '☁️',  // Overcast
-            45: '🌫️', // Foggy
-            48: '🌫️', // Depositing rime fog
-            51: '🌦️', // Light drizzle
-            53: '🌦️', // Moderate drizzle
-            55: '🌧️', // Dense drizzle
-            61: '🌧️', // Slight rain
-            63: '🌧️', // Moderate rain
-            65: '🌧️', // Heavy rain
-            71: '🌨️', // Slight snow
-            73: '🌨️', // Moderate snow
-            75: '🌨️', // Heavy snow
-            77: '🌨️', // Snow grains
-            80: '🌦️', // Slight rain showers
-            81: '🌧️', // Moderate rain showers
-            82: '🌧️', // Violent rain showers
-            85: '🌨️', // Slight snow showers
-            86: '🌨️', // Heavy snow showers
-            95: '⛈️', // Thunderstorm
-            96: '⛈️', // Thunderstorm with slight hail
-            99: '⛈️'  // Thunderstorm with heavy hail
+            0: { emoji: '☀️', label: 'Clear sky' },
+            1: { emoji: '🌤️', label: 'Mainly clear' },
+            2: { emoji: '⛅', label: 'Partly cloudy' },
+            3: { emoji: '☁️', label: 'Overcast' },
+            45: { emoji: '🌫️', label: 'Foggy' },
+            48: { emoji: '🌫️', label: 'Foggy' },
+            51: { emoji: '🌦️', label: 'Light drizzle' },
+            53: { emoji: '🌦️', label: 'Drizzle' },
+            55: { emoji: '🌧️', label: 'Heavy drizzle' },
+            61: { emoji: '🌧️', label: 'Light rain' },
+            63: { emoji: '🌧️', label: 'Rain' },
+            65: { emoji: '🌧️', label: 'Heavy rain' },
+            71: { emoji: '🌨️', label: 'Light snow' },
+            73: { emoji: '🌨️', label: 'Snow' },
+            75: { emoji: '🌨️', label: 'Heavy snow' },
+            77: { emoji: '🌨️', label: 'Snow' },
+            80: { emoji: '🌦️', label: 'Light rain showers' },
+            81: { emoji: '🌧️', label: 'Rain showers' },
+            82: { emoji: '🌧️', label: 'Heavy rain showers' },
+            85: { emoji: '🌨️', label: 'Snow showers' },
+            86: { emoji: '🌨️', label: 'Heavy snow showers' },
+            95: { emoji: '⛈️', label: 'Thunderstorm' },
+            96: { emoji: '⛈️', label: 'Thunderstorm with hail' },
+            99: { emoji: '⛈️', label: 'Thunderstorm with heavy hail' }
         };
         
         // Fetch weather data from Open-Meteo API
@@ -187,14 +187,15 @@
                 const low = Math.round(data.daily.temperature_2m_min[0]);
                 
                 // Get weather icon
-                const icon = weatherIcons[weatherCode] || '🌤️';
+                const iconData = weatherIcons[weatherCode] || { emoji: '🌤️', label: 'Partly cloudy' };
                 
-                // Update display
-                document.getElementById('weather-temp').innerHTML = `${icon} ${currentTemp}°F`;
+                // Update display with aria-label for accessibility
+                document.getElementById('weather-temp').innerHTML = 
+                    `<span aria-label="${iconData.label}">${iconData.emoji}</span> ${currentTemp}°F`;
                 document.getElementById('weather-high-low').textContent = `H: ${high}° L: ${low}°`;
             } catch (error) {
                 console.error('Error fetching weather:', error);
-                document.getElementById('weather-temp').textContent = 'Weather unavailable';
+                document.getElementById('weather-temp').textContent = 'Unable to load weather';
                 document.getElementById('weather-high-low').textContent = '';
             }
         }
