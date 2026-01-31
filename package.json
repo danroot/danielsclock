@@ -1,0 +1,12 @@
+{
+  "name": "daniels-clock",
+  "version": "1.0.0",
+  "description": "A clock application with weather display",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
