@@ -168,6 +168,7 @@ app.get('/', async (req, res) => {
         let html = fs.readFileSync(path.join(__dirname, 'index.html'), 'utf8');
         html = html.replace('{{WEATHER_TEMP}}', 'Unable to load weather');
         html = html.replace('{{WEATHER_HIGH_LOW}}', '');
+        html = html.replace('{{FEAST_DAY_TITLE}}', '');
         res.send(html);
     }
 });
