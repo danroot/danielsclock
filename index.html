@@ -11,9 +11,7 @@
             width: 800px;
             height: 480px;
             overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            position: relative;
             font-family: Arial, sans-serif;
             transition: background-color 0.3s, color 0.3s;
         }
@@ -53,17 +51,23 @@
         }
         
         .container {
-            text-align: center;
+            position: absolute;
+            left: 30px;
+            top: 50%;
+            transform: translateY(-50%);
         }
         .date {
+            position: absolute;
+            top: 20px;
+            left: 20px;
             font-size: 20px;
-            margin-top: 20px;
         }
     </style>
 </head>
 <body>
+    <div class="date" id="date"></div>
     <div class="container">
-        <svg width="300" height="300" viewBox="0 0 300 300">
+        <svg width="360" height="360" viewBox="0 0 300 300">
             <!-- Clock face -->
             <circle cx="150" cy="150" r="140" class="clock-face" stroke-width="4"/>
             
@@ -102,8 +106,6 @@
             <!-- Center dot -->
             <circle cx="150" cy="150" r="8" class="clock-element"/>
         </svg>
-        
-        <div class="date" id="date"></div>
     </div>
 
     <script>
