@@ -6,36 +6,69 @@
     <title>Central Time Clock</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            width: 800px;
+            height: 480px;
+            overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
             background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
         }
-        .clock {
+        .container {
             text-align: center;
-            background: white;
-            padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        .time {
-            font-size: 48px;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 10px;
         }
         .date {
-            font-size: 24px;
-            color: #666;
+            font-size: 20px;
+            color: #333;
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
-    <div class="clock">
-        <div class="time" id="time"></div>
+    <div class="container">
+        <svg width="300" height="300" viewBox="0 0 300 300">
+            <!-- Clock face -->
+            <circle cx="150" cy="150" r="140" fill="white" stroke="#333" stroke-width="4"/>
+            
+            <!-- Hour markers -->
+            <g id="hour-markers">
+                <line x1="150" y1="20" x2="150" y2="32" stroke="#ccc" stroke-width="2"/>
+                <line x1="235.4" y1="45.4" x2="227.5" y2="53.3" stroke="#ccc" stroke-width="2"/>
+                <line x1="280" y1="150" x2="268" y2="150" stroke="#ccc" stroke-width="2"/>
+                <line x1="235.4" y1="254.6" x2="227.5" y2="246.7" stroke="#ccc" stroke-width="2"/>
+                <line x1="150" y1="280" x2="150" y2="268" stroke="#ccc" stroke-width="2"/>
+                <line x1="64.6" y1="254.6" x2="72.5" y2="246.7" stroke="#ccc" stroke-width="2"/>
+                <line x1="20" y1="150" x2="32" y2="150" stroke="#ccc" stroke-width="2"/>
+                <line x1="64.6" y1="45.4" x2="72.5" y2="53.3" stroke="#ccc" stroke-width="2"/>
+            </g>
+            
+            <!-- Hour hand -->
+            <line id="hour-hand" x1="150" y1="150" x2="150" y2="90" stroke="#333" stroke-width="8" stroke-linecap="round"/>
+            
+            <!-- Minute hand -->
+            <line id="minute-hand" x1="150" y1="150" x2="150" y2="60" stroke="#333" stroke-width="6" stroke-linecap="round"/>
+            
+            <!-- Hour numbers -->
+            <text x="150" y="45" text-anchor="middle" dominant-baseline="middle" font-size="24" font-weight="bold" fill="#333">12</text>
+            <text x="205" y="58" text-anchor="middle" dominant-baseline="middle" font-size="24" font-weight="bold" fill="#333">1</text>
+            <text x="245" y="98" text-anchor="middle" dominant-baseline="middle" font-size="24" font-weight="bold" fill="#333">2</text>
+            <text x="260" y="150" text-anchor="middle" dominant-baseline="middle" font-size="24" font-weight="bold" fill="#333">3</text>
+            <text x="245" y="202" text-anchor="middle" dominant-baseline="middle" font-size="24" font-weight="bold" fill="#333">4</text>
+            <text x="205" y="242" text-anchor="middle" dominant-baseline="middle" font-size="24" font-weight="bold" fill="#333">5</text>
+            <text x="150" y="255" text-anchor="middle" dominant-baseline="middle" font-size="24" font-weight="bold" fill="#333">6</text>
+            <text x="95" y="242" text-anchor="middle" dominant-baseline="middle" font-size="24" font-weight="bold" fill="#333">7</text>
+            <text x="55" y="202" text-anchor="middle" dominant-baseline="middle" font-size="24" font-weight="bold" fill="#333">8</text>
+            <text x="40" y="150" text-anchor="middle" dominant-baseline="middle" font-size="24" font-weight="bold" fill="#333">9</text>
+            <text x="55" y="98" text-anchor="middle" dominant-baseline="middle" font-size="24" font-weight="bold" fill="#333">10</text>
+            <text x="95" y="58" text-anchor="middle" dominant-baseline="middle" font-size="24" font-weight="bold" fill="#333">11</text>
+            
+            <!-- Center dot -->
+            <circle cx="150" cy="150" r="8" fill="#333"/>
+        </svg>
+        
         <div class="date" id="date"></div>
     </div>
 
@@ -43,14 +76,22 @@
         function updateClock() {
             const now = new Date();
             
-            const timeFormatter = new Intl.DateTimeFormat('en-US', {
-                timeZone: 'America/Chicago',
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit',
-                hour12: true
-            });
+            // Get time in Central Time
+            const centralTimeString = now.toLocaleString('en-US', { timeZone: 'America/Chicago' });
+            const centralTime = new Date(centralTimeString);
             
+            const hours = centralTime.getHours() % 12;
+            const minutes = centralTime.getMinutes();
+            
+            // Calculate angles
+            const minuteAngle = (minutes * 6) - 90; // 6 degrees per minute
+            const hourAngle = (hours * 30 + minutes * 0.5) - 90; // 30 degrees per hour
+            
+            // Update hands
+            document.getElementById('minute-hand').setAttribute('transform', `rotate(${minuteAngle} 150 150)`);
+            document.getElementById('hour-hand').setAttribute('transform', `rotate(${hourAngle} 150 150)`);
+            
+            // Update date
             const dateFormatter = new Intl.DateTimeFormat('en-US', {
                 timeZone: 'America/Chicago',
                 weekday: 'long',
@@ -58,8 +99,6 @@
                 month: 'long',
                 day: 'numeric'
             });
-            
-            document.getElementById('time').textContent = timeFormatter.format(now);
             document.getElementById('date').textContent = dateFormatter.format(now);
         }
         
