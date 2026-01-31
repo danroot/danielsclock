@@ -11,9 +11,7 @@
             width: 800px;
             height: 480px;
             overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            position: relative;
             font-family: Arial, sans-serif;
             transition: background-color 0.3s, color 0.3s;
         }
@@ -53,57 +51,67 @@
         }
         
         .container {
-            text-align: center;
+            position: absolute;
+            left: 30px;
+            top: 65px;
+            bottom: 0;
+            display: flex;
+            align-items: center;
+        }
+        .container svg {
+            width: 440px !important;
+            height: 440px !important;
         }
         .date {
+            position: absolute;
+            top: 20px;
+            left: 20px;
             font-size: 20px;
-            margin-top: 20px;
         }
     </style>
 </head>
 <body>
+    <div class="date" id="date"></div>
     <div class="container">
-        <svg width="300" height="300" viewBox="0 0 300 300">
+        <svg width="440" height="440">
             <!-- Clock face -->
-            <circle cx="150" cy="150" r="140" class="clock-face" stroke-width="4"/>
+            <circle cx="220" cy="220" r="205" class="clock-face" stroke-width="5"/>
             
             <!-- Hour markers -->
             <g id="hour-markers">
-                <line x1="150" y1="20" x2="150" y2="32" class="hour-marker" stroke-width="2"/>
-                <line x1="235.4" y1="45.4" x2="227.5" y2="53.3" class="hour-marker" stroke-width="2"/>
-                <line x1="280" y1="150" x2="268" y2="150" class="hour-marker" stroke-width="2"/>
-                <line x1="235.4" y1="254.6" x2="227.5" y2="246.7" class="hour-marker" stroke-width="2"/>
-                <line x1="150" y1="280" x2="150" y2="268" class="hour-marker" stroke-width="2"/>
-                <line x1="64.6" y1="254.6" x2="72.5" y2="246.7" class="hour-marker" stroke-width="2"/>
-                <line x1="20" y1="150" x2="32" y2="150" class="hour-marker" stroke-width="2"/>
-                <line x1="64.6" y1="45.4" x2="72.5" y2="53.3" class="hour-marker" stroke-width="2"/>
+                <line x1="220" y1="30" x2="220" y2="47" class="hour-marker" stroke-width="3"/>
+                <line x1="345.3" y1="66.6" x2="333.6" y2="78.2" class="hour-marker" stroke-width="3"/>
+                <line x1="410" y1="220" x2="393" y2="220" class="hour-marker" stroke-width="3"/>
+                <line x1="345.3" y1="373.5" x2="333.6" y2="361.8" class="hour-marker" stroke-width="3"/>
+                <line x1="220" y1="410" x2="220" y2="393" class="hour-marker" stroke-width="3"/>
+                <line x1="94.7" y1="373.5" x2="106.4" y2="361.8" class="hour-marker" stroke-width="3"/>
+                <line x1="30" y1="220" x2="47" y2="220" class="hour-marker" stroke-width="3"/>
+                <line x1="94.7" y1="66.6" x2="106.4" y2="78.2" class="hour-marker" stroke-width="3"/>
             </g>
             
             <!-- Hour hand -->
-            <line id="hour-hand" x1="150" y1="150" x2="150" y2="90" class="clock-element" stroke-width="8" stroke-linecap="round"/>
+            <line id="hour-hand" x1="220" y1="220" x2="220" y2="132" class="clock-element" stroke-width="11" stroke-linecap="round"/>
             
             <!-- Minute hand -->
-            <line id="minute-hand" x1="150" y1="150" x2="150" y2="60" class="clock-element" stroke-width="6" stroke-linecap="round"/>
+            <line id="minute-hand" x1="220" y1="220" x2="220" y2="88" class="clock-element" stroke-width="8" stroke-linecap="round"/>
             
             <!-- Hour numbers -->
-            <text x="150" y="45" text-anchor="middle" dominant-baseline="middle" font-size="24" font-weight="bold" class="clock-element">12</text>
-            <text x="205" y="58" text-anchor="middle" dominant-baseline="middle" font-size="24" font-weight="bold" class="clock-element">1</text>
-            <text x="245" y="98" text-anchor="middle" dominant-baseline="middle" font-size="24" font-weight="bold" class="clock-element">2</text>
-            <text x="260" y="150" text-anchor="middle" dominant-baseline="middle" font-size="24" font-weight="bold" class="clock-element">3</text>
-            <text x="245" y="202" text-anchor="middle" dominant-baseline="middle" font-size="24" font-weight="bold" class="clock-element">4</text>
-            <text x="205" y="242" text-anchor="middle" dominant-baseline="middle" font-size="24" font-weight="bold" class="clock-element">5</text>
-            <text x="150" y="255" text-anchor="middle" dominant-baseline="middle" font-size="24" font-weight="bold" class="clock-element">6</text>
-            <text x="95" y="242" text-anchor="middle" dominant-baseline="middle" font-size="24" font-weight="bold" class="clock-element">7</text>
-            <text x="55" y="202" text-anchor="middle" dominant-baseline="middle" font-size="24" font-weight="bold" class="clock-element">8</text>
-            <text x="40" y="150" text-anchor="middle" dominant-baseline="middle" font-size="24" font-weight="bold" class="clock-element">9</text>
-            <text x="55" y="98" text-anchor="middle" dominant-baseline="middle" font-size="24" font-weight="bold" class="clock-element">10</text>
-            <text x="95" y="58" text-anchor="middle" dominant-baseline="middle" font-size="24" font-weight="bold" class="clock-element">11</text>
+            <text x="220" y="66" text-anchor="middle" dominant-baseline="middle" font-size="35" font-weight="bold" class="clock-element">12</text>
+            <text x="300" y="85" text-anchor="middle" dominant-baseline="middle" font-size="35" font-weight="bold" class="clock-element">1</text>
+            <text x="360" y="144" text-anchor="middle" dominant-baseline="middle" font-size="35" font-weight="bold" class="clock-element">2</text>
+            <text x="382" y="220" text-anchor="middle" dominant-baseline="middle" font-size="35" font-weight="bold" class="clock-element">3</text>
+            <text x="360" y="296" text-anchor="middle" dominant-baseline="middle" font-size="35" font-weight="bold" class="clock-element">4</text>
+            <text x="300" y="355" text-anchor="middle" dominant-baseline="middle" font-size="35" font-weight="bold" class="clock-element">5</text>
+            <text x="220" y="374" text-anchor="middle" dominant-baseline="middle" font-size="35" font-weight="bold" class="clock-element">6</text>
+            <text x="140" y="355" text-anchor="middle" dominant-baseline="middle" font-size="35" font-weight="bold" class="clock-element">7</text>
+            <text x="80" y="296" text-anchor="middle" dominant-baseline="middle" font-size="35" font-weight="bold" class="clock-element">8</text>
+            <text x="58" y="220" text-anchor="middle" dominant-baseline="middle" font-size="35" font-weight="bold" class="clock-element">9</text>
+            <text x="80" y="144" text-anchor="middle" dominant-baseline="middle" font-size="35" font-weight="bold" class="clock-element">10</text>
+            <text x="140" y="85" text-anchor="middle" dominant-baseline="middle" font-size="35" font-weight="bold" class="clock-element">11</text>
             
             <!-- Center dot -->
-            <circle cx="150" cy="150" r="8" class="clock-element"/>
+            <circle cx="220" cy="220" r="12" class="clock-element"/>
         </svg>
-        
-        <div class="date" id="date"></div>
     </div>
 
     <script>
@@ -142,8 +150,8 @@
             const hourAngle = hours * 30 + minutes * 0.5; // 30 degrees per hour
             
             // Update hands
-            document.getElementById('minute-hand').setAttribute('transform', `rotate(${minuteAngle} 150 150)`);
-            document.getElementById('hour-hand').setAttribute('transform', `rotate(${hourAngle} 150 150)`);
+            document.getElementById('minute-hand').setAttribute('transform', `rotate(${minuteAngle} 220 220)`);
+            document.getElementById('hour-hand').setAttribute('transform', `rotate(${hourAngle} 220 220)`);
             
             // Update date
             const dateFormatter = new Intl.DateTimeFormat('en-US', {
