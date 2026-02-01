@@ -178,7 +178,16 @@ app.get('/', async (req, res) => {
         // Replace placeholders with weather data
         html = html.replace('{{WEATHER_TEMP}}', `<svg class="weather-icon" aria-label="${weather.label}"><use href="#${weather.icon}"></use></svg>${weather.temp}°F`);
         html = html.replace('{{WEATHER_HIGH_LOW}}', `${weather.high}° / ${weather.low}°`);
-        html = html.replace('{{FEAST_DAY_TITLE}}', saintOfTheDay.feastDay ? `${saintOfTheDay.feastDay}${saintOfTheDay.fasting ? '<span class="fasting-info">' + saintOfTheDay.fasting + '</span>' : ''}` : '');
+        
+        // Build feast day HTML with optional fasting info
+        let feastDayHtml = '';
+        if (saintOfTheDay.feastDay) {
+            feastDayHtml = saintOfTheDay.feastDay;
+            if (saintOfTheDay.fasting) {
+                feastDayHtml += '<span class="fasting-info">' + saintOfTheDay.fasting + '</span>';
+            }
+        }
+        html = html.replace('{{FEAST_DAY_TITLE}}', feastDayHtml);
         
         // Generate forecast HTML
         let forecastHtml = '';
