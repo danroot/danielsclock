@@ -9,6 +9,23 @@ const port = process.env.PORT || 3000;
 console.log('PORT env:', process.env.PORT);
 console.log('Using port:', port);
 
+// Helper function to escape HTML to prevent XSS
+function escapeHtml(text) {
+    const map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+    };
+    return text.replace(/[&<>"']/g, m => map[m]);
+}
+
+// Helper function to replace all template placeholders with empty strings
+function clearPlaceholders(html) {
+    return html.replace(/\{\{[A-Z_]+\}\}/g, '');
+}
+
 // Madison, MS coordinates
 const MADISON_LAT = 32.4610;
 const MADISON_LON = -90.1153;
@@ -182,9 +199,9 @@ app.get('/', async (req, res) => {
         // Build feast day HTML with optional fasting info
         let feastDayHtml = '';
         if (saintOfTheDay.feastDay) {
-            feastDayHtml = saintOfTheDay.feastDay;
+            feastDayHtml = escapeHtml(saintOfTheDay.feastDay);
             if (saintOfTheDay.fasting) {
-                feastDayHtml += '<span class="fasting-info">' + saintOfTheDay.fasting + '</span>';
+                feastDayHtml += '<span class="fasting-info">' + escapeHtml(saintOfTheDay.fasting) + '</span>';
             }
         }
         html = html.replace('{{FEAST_DAY_TITLE}}', feastDayHtml);
@@ -207,10 +224,7 @@ app.get('/', async (req, res) => {
     } catch (error) {
         console.error('Error fetching weather:', error);
         let html = fs.readFileSync(path.join(__dirname, 'index.html'), 'utf8');
-        html = html.replace('{{WEATHER_TEMP}}', '');
-        html = html.replace('{{WEATHER_HIGH_LOW}}', '');
-        html = html.replace('{{FEAST_DAY_TITLE}}', '');
-        html = html.replace('{{FORECAST}}', '');
+        html = clearPlaceholders(html);
         res.send(html);
     }
 });
