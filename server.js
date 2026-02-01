@@ -149,6 +149,7 @@ async function fetchSaintOfTheDay() {
 
     const result = {
         feastDay: liturgicalDay.feastDayTitle || '',
+        fasting: liturgicalDay.fasting || '',
         fastDesignation: liturgicalDay.fastDesignation || '',
         description: liturgicalDay.feastDayDescription || '',
         reading1Title: liturgicalDay.reading1Title || '',
@@ -176,8 +177,8 @@ app.get('/', async (req, res) => {
 
         // Replace placeholders with weather data
         html = html.replace('{{WEATHER_TEMP}}', `<svg class="weather-icon" aria-label="${weather.label}"><use href="#${weather.icon}"></use></svg>${weather.temp}°F`);
-        html = html.replace('{{WEATHER_HIGH_LOW}}', `H: ${weather.high}° L: ${weather.low}°`);
-        html = html.replace('{{FEAST_DAY_TITLE}}', saintOfTheDay.feastDay || '');
+        html = html.replace('{{WEATHER_HIGH_LOW}}', `${weather.high}° / ${weather.low}°`);
+        html = html.replace('{{FEAST_DAY_TITLE}}', saintOfTheDay.feastDay ? `${saintOfTheDay.feastDay}${saintOfTheDay.fasting ? '<span class="fasting-info">' + saintOfTheDay.fasting + '</span>' : ''}` : '');
         
         // Generate forecast HTML
         let forecastHtml = '';
@@ -187,7 +188,7 @@ app.get('/', async (req, res) => {
             const dateStr = `${month}/${dayOfMonth}`;
             forecastHtml += `<div class="forecast-day">
                 <div class="forecast-date">${dateStr}</div>
-                <div class="forecast-temps">H: ${day.high}° L: ${day.low}°</div>
+                <div class="forecast-temps">${day.high}° / ${day.low}°</div>
                 <svg class="forecast-icon" aria-label="${day.label}"><use href="#${day.icon}"></use></svg>
             </div>`;
         });
@@ -197,7 +198,7 @@ app.get('/', async (req, res) => {
     } catch (error) {
         console.error('Error fetching weather:', error);
         let html = fs.readFileSync(path.join(__dirname, 'index.html'), 'utf8');
-        html = html.replace('{{WEATHER_TEMP}}', 'Unable to load weather');
+        html = html.replace('{{WEATHER_TEMP}}', '');
         html = html.replace('{{WEATHER_HIGH_LOW}}', '');
         html = html.replace('{{FEAST_DAY_TITLE}}', '');
         html = html.replace('{{FORECAST}}', '');
