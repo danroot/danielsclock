@@ -183,7 +183,7 @@ app.get('/', async (req, res) => {
         let forecastHtml = '';
         weather.forecast.forEach(day => {
             // Parse date explicitly to avoid timezone issues (API returns YYYY-MM-DD in America/Chicago)
-            const [year, month, dayOfMonth] = day.date.split('-').map(Number);
+            const [, month, dayOfMonth] = day.date.split('-').map(Number);
             const dateStr = `${month}/${dayOfMonth}`;
             forecastHtml += `<div class="forecast-day">
                 <div class="forecast-date">${dateStr}</div>
