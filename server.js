@@ -54,7 +54,7 @@ async function fetchWeather() {
         return weatherCache.data;
     }
 
-    const url = `https://api.open-meteo.com/v1/forecast?latitude=${MADISON_LAT}&longitude=${MADISON_LON}&current=temperature_2m,weather_code&daily=temperature_2m_max,temperature_2m_min&temperature_unit=fahrenheit&timezone=America/Chicago&forecast_days=1`;
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${MADISON_LAT}&longitude=${MADISON_LON}&current=temperature_2m,weather_code&daily=temperature_2m_max,temperature_2m_min,weather_code&temperature_unit=fahrenheit&timezone=America/Chicago&forecast_days=8`;
     
     const response = await fetch(url);
     const weatherData = await response.json();
@@ -66,12 +66,28 @@ async function fetchWeather() {
 
     const iconData = weatherIcons[weatherCode] || { icon: 'icon-partly-cloudy', label: 'Partly cloudy' };
 
+    // Get 7-day forecast (skip today, get next 7 days)
+    const forecast = [];
+    const maxDays = Math.min(weatherData.daily.time.length, 8);
+    for (let i = 1; i < maxDays; i++) {
+        const forecastWeatherCode = weatherData.daily.weather_code[i];
+        const forecastIconData = weatherIcons[forecastWeatherCode] || { icon: 'icon-partly-cloudy', label: 'Partly cloudy' };
+        forecast.push({
+            date: weatherData.daily.time[i],
+            high: Math.round(weatherData.daily.temperature_2m_max[i]),
+            low: Math.round(weatherData.daily.temperature_2m_min[i]),
+            icon: forecastIconData.icon,
+            label: forecastIconData.label
+        });
+    }
+
     const result = {
         temp: currentTemp,
         icon: iconData.icon,
         label: iconData.label,
         high: high,
-        low: low
+        low: low,
+        forecast: forecast
     };
 
     // Update cache
@@ -162,6 +178,21 @@ app.get('/', async (req, res) => {
         html = html.replace('{{WEATHER_TEMP}}', `<svg class="weather-icon" aria-label="${weather.label}"><use href="#${weather.icon}"></use></svg>${weather.temp}°F`);
         html = html.replace('{{WEATHER_HIGH_LOW}}', `H: ${weather.high}° L: ${weather.low}°`);
         html = html.replace('{{FEAST_DAY_TITLE}}', saintOfTheDay.feastDay || '');
+        
+        // Generate forecast HTML
+        let forecastHtml = '';
+        weather.forecast.forEach(day => {
+            // Parse date explicitly to avoid timezone issues (API returns YYYY-MM-DD in America/Chicago)
+            const [, month, dayOfMonth] = day.date.split('-').map(Number);
+            const dateStr = `${month}/${dayOfMonth}`;
+            forecastHtml += `<div class="forecast-day">
+                <div class="forecast-date">${dateStr}</div>
+                <div class="forecast-temps">H: ${day.high}° L: ${day.low}°</div>
+                <svg class="forecast-icon" aria-label="${day.label}"><use href="#${day.icon}"></use></svg>
+            </div>`;
+        });
+        html = html.replace('{{FORECAST}}', forecastHtml);
+        
         res.send(html);
     } catch (error) {
         console.error('Error fetching weather:', error);
@@ -169,6 +200,7 @@ app.get('/', async (req, res) => {
         html = html.replace('{{WEATHER_TEMP}}', 'Unable to load weather');
         html = html.replace('{{WEATHER_HIGH_LOW}}', '');
         html = html.replace('{{FEAST_DAY_TITLE}}', '');
+        html = html.replace('{{FORECAST}}', '');
         res.send(html);
     }
 });

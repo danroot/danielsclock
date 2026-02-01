@@ -100,6 +100,34 @@
             font-weight: normal;
             margin-top: -5px;
         }
+        .forecast {
+            position: absolute;
+            top: 90px;
+            right: 20px;
+            width: 140px;
+            font-size: 14px;
+        }
+        .forecast-day {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            justify-content: space-between;
+        }
+        .forecast-date {
+            flex: 0 0 40px;
+            font-weight: bold;
+        }
+        .forecast-temps {
+            flex: 1;
+            font-size: 12px;
+            text-align: left;
+            margin-left: 5px;
+        }
+        .forecast-icon {
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
+        }
         
         /* Icon preview mode */
         .icon-preview {
@@ -209,6 +237,9 @@
         <div class="weather-temp" id="weather-temp" aria-live="polite">{{WEATHER_TEMP}}</div>
         <div class="weather-high-low" id="weather-high-low" aria-live="polite">{{WEATHER_HIGH_LOW}}</div>
     </section>
+    <div class="forecast" id="forecast" aria-label="7-day weather forecast">
+        {{FORECAST}}
+    </div>
     <div class="feast-day" id="feast-day" aria-live="polite">{{FEAST_DAY_TITLE}}</div>
     
     <div class="icon-preview" id="icon-preview">
