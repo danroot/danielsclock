@@ -80,24 +80,31 @@
             display: block;
             font-size: 14px;
             margin-top: 2px;
+            position: absolute;
+            top: 72px;
+            left: 20px;
         }
         .weather {
             position: absolute;
             top: 5px;
             right: 20px;
-            font-size: 36px;
-            font-weight: bold;
+            font-size: 36px;          
             text-align: right;
         }
         .weather-icon {
-            width: 48px;
-            height: 48px;
+            width: 40px;
+            height: 50px;
             display: inline-block;
             vertical-align: middle;
-            margin-right: 8px;
+            margin-right: -8px;
+            margin-top: -3px;
+            margin-bottom: 5px;
         }
         .weather-temp {
             display: block;
+        }
+        .light{
+            color: #ccc;
         }
         .weather-high-low {
             display: block;
@@ -107,7 +114,7 @@
         }
         .forecast {
             position: absolute;
-            top: 90px;
+            top: 54px;
             right: 20px;
             width: 140px;
             font-size: 16px;
@@ -117,15 +124,11 @@
             align-items: center;
             margin-bottom: 5px;
             justify-content: space-between;
-        }
-        .forecast-date {
-            flex: 0 0 45px;
-            font-weight: bold;
-        }
+        }      
         .forecast-temps {
             flex: 1;
-            font-size: 14px;
-            text-align: left;
+            font-size: 15px;
+            text-align: right;
             margin-left: 3px;
         }
         .forecast-icon {
@@ -240,12 +243,12 @@
     <div class="date" id="date"></div>
     <section class="weather" id="weather" aria-label="Current weather in Madison, Mississippi">
         <div class="weather-temp" id="weather-temp" aria-live="polite">{{WEATHER_TEMP}}</div>
-        <div class="weather-high-low" id="weather-high-low" aria-live="polite">{{WEATHER_HIGH_LOW}}</div>
     </section>
     <div class="forecast" id="forecast" aria-label="7-day weather forecast">
         {{FORECAST}}
     </div>
     <div class="feast-day" id="feast-day" aria-live="polite">{{FEAST_DAY_TITLE}}</div>
+    <div class="fasting-info" id="fasting-info">{{FASTING_INFO}}</div>
     
     <div class="icon-preview" id="icon-preview">
         <div class="icon-preview-item">

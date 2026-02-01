@@ -86,7 +86,7 @@ async function fetchWeather() {
     // Get 7-day forecast (skip today, get next 7 days)
     const forecast = [];
     const maxDays = Math.min(weatherData.daily.time.length, 8);
-    for (let i = 1; i < maxDays; i++) {
+    for (let i = 0; i < maxDays; i++) {
         const forecastWeatherCode = weatherData.daily.weather_code[i];
         const forecastIconData = weatherIcons[forecastWeatherCode] || { icon: 'icon-partly-cloudy', label: 'Partly cloudy' };
         forecast.push({
@@ -165,8 +165,7 @@ async function fetchSaintOfTheDay() {
     const liturgicalDay = response.liturgicalDay;
 
     const result = {
-        feastDay: liturgicalDay.feastDayTitle || '',
-        fasting: liturgicalDay.fasting || '',
+        feastDay: liturgicalDay.feastDayTitle || '',        
         fastDesignation: liturgicalDay.fastDesignation || '',
         description: liturgicalDay.feastDayDescription || '',
         reading1Title: liturgicalDay.reading1Title || '',
@@ -192,19 +191,10 @@ app.get('/', async (req, res) => {
         const htmlPath = path.join(__dirname, 'index.html');
         let html = fs.readFileSync(htmlPath, 'utf8');
 
-        // Replace placeholders with weather data
-        html = html.replace('{{WEATHER_TEMP}}', `<svg class="weather-icon" aria-label="${weather.label}"><use href="#${weather.icon}"></use></svg>${weather.temp}°F`);
-        html = html.replace('{{WEATHER_HIGH_LOW}}', `${weather.high}° / ${weather.low}°`);
-        
-        // Build feast day HTML with optional fasting info
-        let feastDayHtml = '';
-        if (saintOfTheDay.feastDay) {
-            feastDayHtml = escapeHtml(saintOfTheDay.feastDay);
-            if (saintOfTheDay.fasting) {
-                feastDayHtml += '<span class="fasting-info">' + escapeHtml(saintOfTheDay.fasting) + '</span>';
-            }
-        }
-        html = html.replace('{{FEAST_DAY_TITLE}}', feastDayHtml);
+        // Replace placeholders with data
+        html = html.replace('{{WEATHER_TEMP}}', `${weather.temp}° <svg class="weather-icon" aria-label="${weather.label}"><use href="#${weather.icon}"></use></svg>`);        
+        html = html.replace('{{FEAST_DAY_TITLE}}', escapeHtml(saintOfTheDay.feastDay) ?? '');
+        html = html.replace('{{FASTING_INFO}}', escapeHtml(saintOfTheDay.fastDesignation)?? '');
         
         // Generate forecast HTML
         let forecastHtml = '';
@@ -212,9 +202,8 @@ app.get('/', async (req, res) => {
             // Parse date explicitly to avoid timezone issues (API returns YYYY-MM-DD in America/Chicago)
             const [, month, dayOfMonth] = day.date.split('-').map(Number);
             const dateStr = `${month}/${dayOfMonth}`;
-            forecastHtml += `<div class="forecast-day">
-                <div class="forecast-date">${dateStr}</div>
-                <div class="forecast-temps">${day.high}° / ${day.low}°</div>
+            forecastHtml += `<div class="forecast-day">        
+                <div class="forecast-temps">${dateStr} <span class="light">•</span> ${day.high}°/${day.low}°</div>
                 <svg class="forecast-icon" aria-label="${day.label}"><use href="#${day.icon}"></use></svg>
             </div>`;
         });
