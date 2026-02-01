@@ -68,7 +68,8 @@ async function fetchWeather() {
 
     // Get 7-day forecast (skip today, get next 7 days)
     const forecast = [];
-    for (let i = 1; i <= 7; i++) {
+    const maxDays = Math.min(weatherData.daily.time.length, 8);
+    for (let i = 1; i < maxDays; i++) {
         const forecastWeatherCode = weatherData.daily.weather_code[i];
         const forecastIconData = weatherIcons[forecastWeatherCode] || { icon: 'icon-partly-cloudy', label: 'Partly cloudy' };
         forecast.push({
@@ -181,8 +182,9 @@ app.get('/', async (req, res) => {
         // Generate forecast HTML
         let forecastHtml = '';
         weather.forecast.forEach(day => {
-            const date = new Date(day.date);
-            const dateStr = `${date.getMonth() + 1}/${date.getDate()}`;
+            // Parse date explicitly to avoid timezone issues (API returns YYYY-MM-DD in America/Chicago)
+            const [year, month, dayOfMonth] = day.date.split('-').map(Number);
+            const dateStr = `${month}/${dayOfMonth}`;
             forecastHtml += `<div class="forecast-day">
                 <div class="forecast-date">${dateStr}</div>
                 <div class="forecast-temps">H: ${day.high}° L: ${day.low}°</div>
