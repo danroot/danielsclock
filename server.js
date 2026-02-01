@@ -192,7 +192,7 @@ app.get('/', async (req, res) => {
         let html = fs.readFileSync(htmlPath, 'utf8');
 
         // Replace placeholders with data
-        html = html.replace('{{WEATHER_TEMP}}', `${weather.temp}° <svg class="weather-icon" aria-label="${weather.label}"><use href="#${weather.icon}"></use></svg>`);        
+        html = html.replace('{{WEATHER_TEMP}}', `${weather.temp}°<svg class="weather-icon" aria-label="${weather.label}"><use href="#${weather.icon}"></use></svg>`);        
         html = html.replace('{{FEAST_DAY_TITLE}}', escapeHtml(saintOfTheDay.feastDay) ?? '');
         html = html.replace('{{FASTING_INFO}}', escapeHtml(saintOfTheDay.fastDesignation)?? '');
         
