@@ -287,10 +287,16 @@
             <circle cx="190" cy="190" r="170" class="clock-face" stroke-width="2"/>
             
             <!-- Hour hand -->
-            <line id="hour-hand" x1="190" y1="190" x2="190" y2="114" class="clock-element" stroke-width="10" stroke-linecap="round"/>
+            <g id="hour-hand" class="clock-element">
+                <line x1="190" y1="190" x2="190" y2="124" stroke-width="8"/>
+                <polygon points="190,114 185,124 195,124" fill="currentColor"/>
+            </g>
             
             <!-- Minute hand -->
-            <line id="minute-hand" x1="190" y1="190" x2="190" y2="76" class="clock-element" stroke-width="7" stroke-linecap="round"/>
+            <g id="minute-hand" class="clock-element">
+                <line x1="190" y1="190" x2="190" y2="86" stroke-width="5"/>
+                <polygon points="190,76 186,86 194,86" fill="currentColor"/>
+            </g>
             
             <!-- Hour numbers -->
             <text x="190" y="43" text-anchor="middle" dominant-baseline="middle" font-size="30" font-weight="bold" class="clock-element">12</text>
@@ -308,6 +314,7 @@
             
             <!-- Center dot -->
             <circle cx="190" cy="190" r="10" class="clock-element"/>
+            <circle cx="190" cy="190" r="5" fill="white" stroke="white"/>
         </svg>
     </div>
 
